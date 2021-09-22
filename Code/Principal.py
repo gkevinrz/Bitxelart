@@ -1,33 +1,48 @@
+import textwrap
+from VerImagen import VerImagen
 from tkinter import *
 from tkinter import ttk
 from AnalizarArchivo import AnalizarArchivo
 from VerReportes import VerReportes
+from CargarArchivo import CargarArchivo
 class Application():
     def __init__(self):
         self.root = Tk()
-        self.root.title('Bitxelart')
-        self.root.geometry('800x800')
+        self.root.title('Bitxelart')     
         self.root.iconbitmap('Images/Icono.ico')
-        self.root.config(bg='#2E4053')
-    def create_widgets(self):
-        
-        #self.hi_there=Button(self.root,text="Hello World\n(click me)", fg="blue",command=self.say_hi)  
-        #self.quit=Button(self.root,text="QUIT", fg="red",command=self.root.destroy)
-        #self.hi_there.pack(side="top")
-        #self.quit.pack(side="bottom")
-        #
-        panelprueba=ttk.Notebook(self.root)
-        p=AnalizarArchivo(panelprueba)
-        p2=VerReportes(panelprueba)
-        panelprueba.add(p.frameprueba,text="AnalizarArchivo", padding=10)
-        panelprueba.add(p2.frameprueba,text="Ver Reportes", padding=10)
+        self.root.config(bg='#e5e7e9')
+        self.root.state('zoomed')
 
-        panelprueba.pack(pady=10, expand=True)
+    def create_widgets(self):
+        Menu=ttk.Notebook(self.root)
+        s =ttk.Style()
+        s.theme_use('default')
+        s.configure('TNotebook', tabposition='n',background='#17202a') 
+        s.configure('TNotebook.Tab', font=('Segoe UI', 12,'bold'),background='#3498db', foreground='white', borderwidth=0)
+        s.map('TNotebook.Tab', background=[('selected', '#2471a3'),('active', "#3498db")], foreground=[("selected", 'white')])
+        #s.theme_use("default")
+        
+    
+        #Menu.styl
+        Menu.config(width=1000,height=500)
+        Ventana_Cargar=CargarArchivo(Menu)
+        #Ventana_Analizar=AnalizarArchivo(Menu)
+        Ventana_Reportes=VerReportes(Menu)
+        Ventana_VerImagen=VerImagen(Menu)
+        Menu.add(Ventana_Cargar.FrameCargar,text='Cargar Archivo',padding=10)
+        #Menu.add(Ventana_Analizar.FrameAnalizar,text="Analizar Archivo", padding=10)
+        Menu.add(Ventana_VerImagen.FrameVerImagen,text="Ver Imagen", padding=10)
+        Menu.add(Ventana_Reportes.FrameReportes,text="Ver Reportes", padding=10)
+
+        
+        #fill='both', expand=True
+        Menu.pack(ipadx=10,ipady=10,expand=True)
         
 
 
     def say_hi(self):
-        print("hi there, everyone!")
+        pass
+        #os.system('dot -Tpng imagen.html -o NuevaImagen.png')
 
 
 Aps=Application()
