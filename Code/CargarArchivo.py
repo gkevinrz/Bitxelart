@@ -1132,7 +1132,12 @@ class CargarArchivo():
             print(self.Filtros)
             #for i in self.ListaErrores:
              #   print (i.descripcion,i.caracter)
-     
+    def GenerarTokens(self):
+        pass
+    def GeneraErrores(self):
+        pass
+    def Generarimagenes(self):
+        pass
                 
             
 
