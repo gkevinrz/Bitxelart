@@ -2,7 +2,13 @@
 
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
-
+ .header {
+  padding: 60px;
+  text-align: center;
+  background: #2471a3 ;
+  color: white;
+  font-size: 30px;
+}
 
 @font-face {
   font-family: Lato-Regular;
@@ -171,6 +177,7 @@ table {
 }
 
 th, td {
+	
   font-weight: unset;
   padding-right: 10px;
 }
@@ -204,6 +211,7 @@ th, td {
 .table100-body td {
   padding-top: 16px;
   padding-bottom: 16px;
+  
 }
 
 /*==================================================================
@@ -241,7 +249,7 @@ th, td {
 .table100.ver1 td {
   font-family: Lato-Regular;
   font-size: 15px;
-  color: #808080;
+  color: black;
   line-height: 1.4;
 }
 

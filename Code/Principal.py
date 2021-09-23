@@ -2,10 +2,10 @@ import textwrap
 from VerImagen import VerImagen
 from tkinter import *
 from tkinter import ttk
-from AnalizarArchivo import AnalizarArchivo
 from VerReportes import VerReportes
-from CargarArchivo import CargarArchivo
+from CargarArchivo import CargarArchivo,ListaTituloGlobal
 class Application():
+    
     def __init__(self):
         self.root = Tk()
         self.root.title('Bitxelart')     
@@ -28,7 +28,7 @@ class Application():
         Ventana_Cargar=CargarArchivo(Menu)
         #Ventana_Analizar=AnalizarArchivo(Menu)
         Ventana_Reportes=VerReportes(Menu)
-        Ventana_VerImagen=VerImagen(Menu)
+        Ventana_VerImagen=VerImagen(Menu,ListaTituloGlobal)
         Menu.add(Ventana_Cargar.FrameCargar,text='Cargar Archivo',padding=10)
         #Menu.add(Ventana_Analizar.FrameAnalizar,text="Analizar Archivo", padding=10)
         Menu.add(Ventana_VerImagen.FrameVerImagen,text="Ver Imagen", padding=10)

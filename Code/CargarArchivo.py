@@ -1,11 +1,14 @@
 
-from os import error, linesep
+from os import error, linesep,mkdir
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from Error import Error
 from Token import Token
+
+ListaTituloGlobal=[]
 class CargarArchivo():
+    
     def __init__(self,recibo):
         self.PalabrasReservadas=['TITULO','CELDAS','FILTROS','ALTO','ANCHO','FILAS','COLUMNAS']
         self.Simbolos=['=','"',';','{','[','#',']','}','@']
@@ -25,6 +28,7 @@ class CargarArchivo():
         self.Booleans=[]
         self.BooleansAux=[]
         self.Posiciones=[]
+        self.PosicionesTotales=[]
         self.PosicionesAux=[]
         self.PosicionesAux2=[]
         ##########################
@@ -259,33 +263,35 @@ class CargarArchivo():
                             err=Error('Sintactico',fila,columna,'Se esperaba " ',c)
                             self.ListaErrores.append(err)
                 elif estado==8:
-                    if self.isLetra(c):
-                        lexActual=lexActual+c
-                        tokencadena=tokencadena+c
-                        estado=9                       
-                    else:
-                        if ord(c) == 32 or ord(c) == 10 or ord(c) == 9 or c == '~':
-                            pass
-                        else:
-                            err=Error('Sintactico',fila,columna,'Se esperaba texto',c)
-                            self.ListaErrores.append(err)        
+
+                    #if self.isLetra(c):
+                    lexActual=lexActual+c
+                    tokencadena=tokencadena+c
+                    estado=9                       
+                    #else:
+                    if ord(c) == 32 or ord(c) == 10 or ord(c) == 9 or c == '~':
+                        pass
+                    #else:
+                            #err=Error('Sintactico',fila,columna,'Se esperaba texto',c)
+                            #self.ListaErrores.append(err)        
                 elif estado==9:
-                    if self.isLetra(c):
+                    #if #self.#isLetra(c):
+                    if ord(c)!=34:
                         lexActual=lexActual+c
                         tokencadena=tokencadena+c
                         estado=9    
                         #self.Titulos.append(lexActual)
-                    elif ord(c)==34:
+                    if ord(c)==34:
                         lexActual=lexActual+c
                         estado=10
                     else:
                         if ord(c) == 32 or ord(c) == 10 or ord(c) == 9 or c == '~':
                             pass
-                        elif ord(c)!=34 or self.isLetra(c)==False:
-                            err=Error('Sintactico',fila,columna,'Se esperaba una cadena o "',c)
-                            self.ListaErrores.append(err)                  
+                        #elif ord(c)!=34:
+                            #err=Error('Sintactico',fila,columna,'Se esperaba una cadena o "',c)
+                            #self.ListaErrores.append(err)                  
                 elif estado==10:
-                    print(columna)
+                    #print(columna)
                     contT+=1
                     token=Token(contT,tokencadena,fila,columna-(len(tokencadena)),'Cadena')
                     self.ListaTokens.append(token)
@@ -863,7 +869,7 @@ class CargarArchivo():
                     contT+=1
                     token=Token(contT,tokenNumero,fila,columna-(len(tokenNumero)),'Numero')
                     self.ListaTokens.append(token)
-                    pos=[int(tokenY),int(tokenX)]
+                    pos=[int(tokenX),int(tokenY)]
                     self.PosicionesAux.append(pos)
                     tokenNumero=''
                     tokenX=''
@@ -1117,27 +1123,401 @@ class CargarArchivo():
                     columna += 1
                     continue
                 columna+=1
-            #for a in self.ListaErrores:
-             #   print( a.tipoError,a.descripcion,a.caracter,a.filaError,a.columnaError)
+            for a in self.ListaErrores:
+                print( a.tipoError,a.descripcion,a.caracter,a.filaError,a.columnaError)
 
             #for ob in self.ListaTokens:
              #   print(ob.num,ob.fila,ob.columna,ob.lexema,ob.token)
             print(self.Titulos)
-            print(self.Anchos)
-            print(self.Altos)
-            print(self.Filas)
-            print(self.Posiciones)
-            print(self.Booleans)
-            print(self.Colores)
-            print(self.Filtros)
+            #print(self.Anchos)
+            #print(self.Altos)
+            #print(self.Filas)
+            #print(self.Columnas)
+            #print(self.Posiciones)
+            #print(self.Booleans)
+            #print(self.Colores)
+            #print(self.Filtros)
             #for i in self.ListaErrores:
              #   print (i.descripcion,i.caracter)
+        
+        self.Generarimagenes()
+        for x in self.Titulos:
+            ListaTituloGlobal.append(x)
+
     def GenerarTokens(self):
         pass
     def GeneraErrores(self):
         pass
     def Generarimagenes(self):
-        pass
+
+        self.Pos=[]
+        for a in range(len(self.Filas)):
+            for f in range(self.Filas[a]):
+                for c in range(self.Columnas[a]):
+                    nuevoPos=[c,f]
+                    self.Pos.append(nuevoPos)
+            pos1=self.Pos.copy()
+            self.PosicionesTotales.append(pos1)
+            self.Pos.clear()
+        
+        txt=''
+        for i in self.Titulos:
+            mkdir(f'{i}')
+
+        for a in range(len(self.Titulos)):
+            f=open(f'{self.Titulos[a]}/Original.html','w')
+            txt="""
+            <!DOCTYPE html>
+            <html>
+            <head>
+            <style>
+            .header {
+                padding: 60px;
+                text-align: center;
+                 background: #2471a3 ;
+                color: white;
+                font-size: 30px;
+                font-family:'Arial';         
+            }
+            body{
+	        height: 100vh;            
+	        display: flex; 
+	        align-items: center;
+	        justify-content: center;
+            }
+            #art{
+            display:table;
+            background-color:white;
+            }
+            #title{
+	        position:absolute;
+	        text-align:center;
+	        font-family:Arial;
+	        margin-bottom:200px;
+            }
+            .row{
+                display:table-row;
+            }
+            .pixel{
+            border:0.5px solid black;
+            display:table-cell;
+            """
+            txt+=f"""
+            width:{self.Anchos[a]/self.Columnas[a]}px;
+            height:{self.Altos[a]/self.Filas[a]}px;
+            """
+            txt+="""}        
+            </style>
+            </head>
+            <header>
+             <div class="header">
+            """
+            txt+=f"""<h1>{self.Titulos[a]}</h1>"""
+            txt+="""
+            </div>
+              </header>
+            <body>
+            <div id="art">
+            """
+            for filas in range(self.Filas[a]):
+                txt+="""<div class="row">"""
+                for columnas in range(self.Columnas[a]):
+                    txt+=f"""<div class="pixel pos{columnas}_{filas}"></div>"""
+                txt+="""</div>"""
+
+            txt+="""            
+            </div>
+            """
+            txt+="""<style>"""
+
+            for item in range(len(self.Posiciones[a])):
+                if (self.Booleans[a][item]=='TRUE'):
+                    txt+=f""".pos{self.Posiciones[a][item][0]}_{self.Posiciones[a][item][1]}"""
+                    txt+="""{"""
+                    txt+=f"""background-color:{self.Colores[a][item]};"""
+                    txt+="""}"""
+                elif (self.Booleans[a][item]=='FALSE'):
+                    pass
+                else:
+                    pass
+
+
+            txt+="""</style>"""
+
+            txt+="""
+            </body>
+            </html>
+            """    
+            f.write(txt)
+            f.close()
+            ###############################
+            for fls in range(len(self.Filtros[a])):
+                if (self.Filtros[a][fls]=='DOUBLEMIRROR'):
+                    dbmirror=open(f'{self.Titulos[a]}/DoubleMirror.html','w')
+                    txt2="""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                    <style>
+                    .header {
+                    padding: 60px;
+                    text-align: center;
+                    background: #2471a3 ;
+                    color: white;
+                    font-size: 30px;
+                    font-family:'Arial';         
+                    }
+                    body{
+	                height: 100vh;            
+	                display: flex; 
+	                align-items: center;
+	                justify-content: center;
+                    }
+                    #art{
+                    display:table;
+                    background-color:white;
+                    }
+                    #title{
+	                position:absolute;
+	                text-align:center;
+	                font-family:Arial;
+	                margin-bottom:200px;
+                    }
+                    .row{
+                    display:table-row;
+                    }
+                    .pixel{
+                    border:0.5px solid black;
+                    display:table-cell;
+                    """
+                    txt2+=f"""
+                    width:{self.Anchos[a]/self.Columnas[a]}px;
+                    height:{self.Altos[a]/self.Filas[a]}px;
+                    """
+                    txt2+="""}        
+                    </style>
+                    
+                        <header>
+                    <div class="header">
+                     """
+                    txt2+=f"""<h1>{self.Titulos[a]}</h1>"""
+                    txt2+="""
+                    </div>
+                    </header>
+                    <body>
+                    <div id="art">
+                    """
+                    #len(self.notas2)-1,-1,-1
+                    for Filas in range(self.Filas[a]-1,-1,-1):
+                        txt2+="""<div class="row">"""
+                        for columnas in range(self.Columnas[a]-1,-1,-1):
+                            txt2+=f"""<div class="pixel pos{columnas}_{Filas}"></div>"""
+                        txt2+="""</div>"""
+
+                    txt2+="""            
+                    </div>
+                    """
+                    txt2+="""<style>"""
+
+                    for item in range(len(self.Posiciones[a])):
+                        if (self.Booleans[a][item]=='TRUE'):
+                            txt2+=f""".pos{self.Posiciones[a][item][0]}_{self.Posiciones[a][item][1]}"""
+                            txt2+="""{"""
+                            txt2+=f"""background-color:{self.Colores[a][item]};"""
+                            txt2+="""}"""
+                        elif (self.Booleans[a][item]=='FALSE'):
+                            pass
+                        else:
+                            pass
+
+
+                    txt2+="""</style>"""
+
+                    txt2+="""
+                    </body>
+                    </html>
+                    """    
+                    dbmirror.write(txt2)
+                    dbmirror.close()
+                elif (self.Filtros[a][fls]=='MIRRORX'):
+                    mirrorX=open(f'{self.Titulos[a]}/MirrorX.html','w')
+                    txt3="""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                    <style>
+                    .header {
+                    padding: 60px;
+                    text-align: center;
+                    background: #2471a3 ;
+                    color: white;
+                    font-size: 30px;
+                    font-family:'Arial';         
+                    }
+                    body{
+	                height: 100vh;            
+	                display: flex; 
+	                align-items: center;
+	                justify-content: center;
+                    }
+                    #art{
+                    display:table;
+                    background-color:white;
+                    }
+                    #title{
+	                position:absolute;
+	                text-align:center;
+	                font-family:Arial;
+	                margin-bottom:200px;
+                    }
+                    .row{
+                    display:table-row;
+                    }
+                    .pixel{
+                    border:0.5px solid black;
+                    display:table-cell;
+                    """
+                    txt3+=f"""
+                    width:{self.Anchos[a]/self.Columnas[a]}px;
+                    height:{self.Altos[a]/self.Filas[a]}px;
+                    """
+                    txt3+="""}        
+                    </style>
+                    </head>
+                     <header>
+                    <div class="header">
+                     """
+                    txt3+=f"""<h1>{self.Titulos[a]}</h1>"""
+                    txt3+="""
+                    </div>
+                    </header>
+                    <body>
+                    <div id="art">
+                    """
+                    #len(self.notas2)-1,-1,-1
+                    for Filas in range(self.Filas[a]):
+                        txt3+="""<div class="row">"""
+                        for columnas in range(self.Columnas[a]-1,-1,-1):
+                            txt3+=f"""<div class="pixel pos{columnas}_{Filas}"></div>"""
+                        txt3+="""</div>"""
+
+                    txt3+="""            
+                    </div>
+                    """
+                    txt3+="""<style>"""
+
+                    for item in range(len(self.Posiciones[a])):
+                        if (self.Booleans[a][item]=='TRUE'):
+                            txt3+=f""".pos{self.Posiciones[a][item][0]}_{self.Posiciones[a][item][1]}"""
+                            txt3+="""{"""
+                            txt3+=f"""background-color:{self.Colores[a][item]};"""
+                            txt3+="""}"""
+                        elif (self.Booleans[a][item]=='FALSE'):
+                            pass
+                        else:
+                            pass
+                    txt3+="""</style>"""
+                    txt3+="""
+                    </body>
+                    </html>
+                    """    
+                    mirrorX.write(txt3)
+                    mirrorX.close()
+                elif (self.Filtros[a][fls]=='MIRRORY'):
+                    mirrorY=open(f'{self.Titulos[a]}/MirrorY.html','w')
+                    txt4="""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                    <style>
+                     .header {
+                    padding: 60px;
+                    text-align: center;
+                    background: #2471a3 ;
+                    color: white;
+                    font-size: 30px;
+                    font-family:'Arial';         
+                    }
+                    body{
+	                height: 100vh;            
+	                display: flex; 
+	                align-items: center;
+	                justify-content: center;
+                    }
+                    #art{
+                    display:table;
+                    background-color:white;
+                    }
+                    #title{
+	                position:absolute;
+	                text-align:center;
+	                font-family:Arial;
+	                margin-bottom:200px;
+                    }
+                    .row{
+                    display:table-row;
+                    }
+                    .pixel{
+                    border:0.5px solid black;
+                    display:table-cell;
+                    """
+                    txt4+=f"""
+                    width:{self.Anchos[a]/self.Columnas[a]}px;
+                    height:{self.Altos[a]/self.Filas[a]}px;
+                    """
+                    txt4+="""}        
+                    </style>
+                    </head>
+                    <header>
+                    <div class="header">
+                    """
+                    txt4+=f"""<h1>{self.Titulos[a]}</h1>"""
+                    txt4+="""
+                    </div>
+                    </header>
+                    <body>
+                    <div id="art">
+                    """
+                    #len(self.notas2)-1,-1,-1
+                    for Filas in range(self.Filas[a]-1,-1,-1):
+                        txt4+="""<div class="row">"""
+                        for columnas in range(self.Columnas[a]):
+                            txt4+=f"""<div class="pixel pos{columnas}_{Filas}"></div>"""
+                        txt4+="""</div>"""
+
+                    txt4+="""            
+                    </div>
+                    """
+                    txt4+="""<style>"""
+
+                    for item in range(len(self.Posiciones[a])):
+                        if (self.Booleans[a][item]=='TRUE'):
+                            txt4+=f""".pos{self.Posiciones[a][item][0]}_{self.Posiciones[a][item][1]}"""
+                            txt4+="""{"""
+                            txt4+=f"""background-color:{self.Colores[a][item]};"""
+                            txt4+="""}"""
+                        elif (self.Booleans[a][item]=='FALSE'):
+                            pass
+                        else:
+                            pass
+                    txt4+="""</style>"""
+                    txt4+="""
+                    </body>
+                    </html>
+                    """    
+                    mirrorY.write(txt4)
+                    mirrorY.close()
+                
+
+
+
+    
+
+        
+
+
+
+
                 
             
 

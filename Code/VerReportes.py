@@ -13,10 +13,10 @@ class VerReportes():
         #labelframe.grid(column=0, row=0, padx=20, pady=20)
       
         #Boton
-        ButVerTokens=Button(labelframe,text ="Generar tabla de tokens",font=('Segoe UI', 12),bd=0,pady=10,padx=10,bg='#0b5345',fg='white',command=self.generarTokens)
+        ButVerTokens=Button(labelframe,text ="Abrir Tabla de Tokens",font=('Segoe UI', 12),bd=0,pady=10,padx=10,bg='#0b5345',fg='white',command=self.generarTokens)
         ButVerTokens.pack(padx=20, pady=20)
         #Boton
-        ButVerErrores=Button(labelframe2,text ="Generar tabla de errores",font=('Segoe UI', 12),bd=0,pady=10,padx=10,bg='#0b5345',fg='white',command=self.generarErrores)
+        ButVerErrores=Button(labelframe2,text ="Abrir Tabla de Errores",font=('Segoe UI', 12),bd=0,pady=10,padx=10,bg='#0b5345',fg='white',command=self.generarErrores)
         ButVerErrores.pack(padx=20, pady=20)
  
        
