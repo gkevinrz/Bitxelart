@@ -1,6 +1,6 @@
 from tkinter import *
 from html2image import Html2Image
-
+import webbrowser
 class VerReportes():
     def __init__(self,recibo):    
 
@@ -25,10 +25,10 @@ class VerReportes():
         self.FrameReportes.pack(fill='both', expand=True)
     
     def generarTokens(self):
-        pass
+        webbrowser.open_new_tab('file:///C:/Users/Usuario/Desktop/Lenguajes/LFP_Proyecto1_201903791/Code/Tabla%20de%20Tokens/index.html')
+        
 
     def generarErrores(self):
-        pass
-    #def say_hi(self):
-     #   hti = Html2Image()
-      #  hti.screenshot(html_file='Prueba.html', css_file='css_prueba.css',save_as='blue_page.png',size=(200,200))
+        rt='file:///C:/Users/Usuario/Desktop/Lenguajes/LFP_Proyecto1_201903791/Code/Tabla%20de%20Errores/index.html'
+        webbrowser.open_new_tab(rt)
+

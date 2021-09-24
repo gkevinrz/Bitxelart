@@ -3,7 +3,7 @@ from VerImagen import VerImagen
 from tkinter import *
 from tkinter import ttk
 from VerReportes import VerReportes
-from CargarArchivo import CargarArchivo,ListaTituloGlobal
+from CargarArchivo import CargarArchivo
 class Application():
     
     def __init__(self):
@@ -24,11 +24,11 @@ class Application():
         
     
         #Menu.styl
-        Menu.config(width=1000,height=500)
+        Menu.config(width=2000,height=1000)
         Ventana_Cargar=CargarArchivo(Menu)
         #Ventana_Analizar=AnalizarArchivo(Menu)
         Ventana_Reportes=VerReportes(Menu)
-        Ventana_VerImagen=VerImagen(Menu,ListaTituloGlobal)
+        Ventana_VerImagen=VerImagen(Menu)
         Menu.add(Ventana_Cargar.FrameCargar,text='Cargar Archivo',padding=10)
         #Menu.add(Ventana_Analizar.FrameAnalizar,text="Analizar Archivo", padding=10)
         Menu.add(Ventana_VerImagen.FrameVerImagen,text="Ver Imagen", padding=10)

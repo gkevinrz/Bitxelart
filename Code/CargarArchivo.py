@@ -1,12 +1,13 @@
 
 from os import error, linesep,mkdir
+import textwrap
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from Error import Error
+from html2image import Html2Image
 from Token import Token
-
-ListaTituloGlobal=[]
+from  VerImagen import ListaTitulos
 class CargarArchivo():
     
     def __init__(self,recibo):
@@ -1123,8 +1124,7 @@ class CargarArchivo():
                     columna += 1
                     continue
                 columna+=1
-            for a in self.ListaErrores:
-                print( a.tipoError,a.descripcion,a.caracter,a.filaError,a.columnaError)
+           
 
             #for ob in self.ListaTokens:
              #   print(ob.num,ob.fila,ob.columna,ob.lexema,ob.token)
@@ -1141,15 +1141,200 @@ class CargarArchivo():
              #   print (i.descripcion,i.caracter)
         
         self.Generarimagenes()
+        self.GeneraErrores()
+        self.GenerarTokens()
         for x in self.Titulos:
-            ListaTituloGlobal.append(x)
+            ListaTitulos.append(x)
+    
+
 
     def GenerarTokens(self):
-        pass
-    def GeneraErrores(self):
-        pass
-    def Generarimagenes(self):
+        tokenshtml=open(f'Tabla de Tokens/index.html','w')
+        txtokens=''
+        txtokens+="""
+        <!DOCTYPE html> 
+        <html lang="en">
+        <head>
+	    <title>Tabla de Tokens</title>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--===============================================================================================-->	
+	    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="css/util.css">
+	    <link rel="stylesheet" type="text/css" href="css/main.css">
+        <!--===============================================================================================-->
+        </head>
+        <div class="header">
+        <h1>Tabla de Tokens</h1>
+        </div>
+        <body>
+	    <div class="limiter">
+		<div class="container-table100">
+		<div class="wrap-table100">
+		<div class="table100 ver1 m-b-110">
+		<div class="table100-head">
+		<table>
+		<thead>
+		<tr class="row100 head">
+		<th class="cell100 column1">No.</th>
+		<th class="cell100 column2">Token</th>
+		<th class="cell100 column3">Lexema</th>
+		<th class="cell100 column4">Fila</th>
+		<th class="cell100 column5">Columna</th>
+		</tr>
+		</thead>
+		</table>
+		</div>
+		<div class="table100-body js-pscroll">
+		<table>
+		<tbody>"""
+        for ob in self.ListaTokens:
+            txtokens+=f"""<tr class="row100 body">
+            <td class="cell100 column1">{ob.num}</td>
+			<td class="cell100 column2">{ob.token}</td>
+			<td class="cell100 column3">{ob.lexema}</td>
+			<td class="cell100 column4">{ob.fila}</td>
+			<td class="cell100 column5">{ob.columna}</td>
+			</tr>"""
+        txtokens+="""
+		</table>
+		</div>
+		</div>
+		</div>
+		</div>
+	    </div>
+        <!--===============================================================================================-->	
+	    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+        <!--===============================================================================================-->
+	    <script src="vendor/bootstrap/js/popper.js"></script>
+	    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+        <!--===============================================================================================-->
+	    <script src="vendor/select2/select2.min.js"></script>
+        <!--===============================================================================================-->
+	    <script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	    <script>
+		$('.js-pscroll').each(function(){
+		var ps = new PerfectScrollbar(this);
+		$(window).on('resize', function(){
+        ps.update();
+		})
+		});
+			
+		
+	    </script>
+        <!--===============================================================================================-->
+	    <script src="js/main.js"></script>
+        </body>
+        </html>
+        """
+        tokenshtml.write(txtokens)
+        tokenshtml.close()
 
+    def GeneraErrores(self):
+        erroreshtml=open('Tabla de Errores/index.html','w')
+        txtError=''
+        txtError+="""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+	    <title>Tabla de Errores</title>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--===============================================================================================-->	
+	    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+        <!--===============================================================================================-->
+        <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+        <!--===============================================================================================-->
+	    <link rel="stylesheet" type="text/css" href="css/util.css">
+	    <link rel="stylesheet" type="text/css" href="css/main.css">
+        <!--===============================================================================================-->
+        </head>
+        <div class="header">
+        <h1>Tabla de Errores</h1>
+        </div>
+        <body>
+	    <div class="limiter">
+		<div class="container-table100">
+		<div class="wrap-table100">	
+		<div class="table100 ver3 m-b-110">
+		<div class="table100-head">
+		<table>
+		<thead>
+		<tr class="row100 head">
+		<th class="cell100 column1">Tipo de Error</th>
+		<th class="cell100 column2">Caracter</th>
+		<th class="cell100 column3">Descripción</th>
+		<th class="cell100 column4">Fila</th>
+		<th class="cell100 column5">Columna</th>
+		</tr>
+		</thead>
+		</table>
+		</div>
+		<div class="table100-body js-pscroll">
+        <table>
+		<tbody>"""
+        for a in self.ListaErrores:
+            txtError+=f"""<tr class="row100 body">
+			<td class="cell100 column1">{a.tipoError}</td>
+			<td class="cell100 column2">{a.caracter}</td>
+			<td class="cell100 column3">{a.descripcion}</td>
+			<td class="cell100 column4">{a.filaError}</td>
+			<td class="cell100 column5">{a.columnaError}</td>
+			</tr>"""
+        txtError+="""
+        </tbody>
+		</table>
+		</div>
+		</div>	
+		</div>
+		</div>
+	    </div>
+        <!--===============================================================================================-->	
+	    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+        <!--===============================================================================================-->
+	    <script src="vendor/bootstrap/js/popper.js"></script>
+	    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+        <!--===============================================================================================-->
+	    <script src="vendor/select2/select2.min.js"></script>
+        <!--===============================================================================================-->
+	    <script src="vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	    <script>
+		$('.js-pscroll').each(function(){
+		var ps = new PerfectScrollbar(this);
+		$(window).on('resize', function(){
+		ps.update();
+		})
+		});
+	    </script>
+        <!--===============================================================================================-->
+	    <script src="js/main.js"></script>
+        </body>
+        </html>
+        """
+        erroreshtml.write(txtError)
+        erroreshtml.close()
+        
+        
+    def Generarimagenes(self):
         self.Pos=[]
         for a in range(len(self.Filas)):
             for f in range(self.Filas[a]):
@@ -1209,13 +1394,6 @@ class CargarArchivo():
             txt+="""}        
             </style>
             </head>
-            <header>
-             <div class="header">
-            """
-            txt+=f"""<h1>{self.Titulos[a]}</h1>"""
-            txt+="""
-            </div>
-              </header>
             <body>
             <div id="art">
             """
@@ -1248,8 +1426,12 @@ class CargarArchivo():
             </body>
             </html>
             """    
+       
             f.write(txt)
             f.close()
+            hti = Html2Image()
+            hti.output_path=f'{self.Titulos[a]}'
+            hti.screenshot(html_file=f'{self.Titulos[a]}/Original.html',save_as='Original.png')
             ###############################
             for fls in range(len(self.Filtros[a])):
                 if (self.Filtros[a][fls]=='DOUBLEMIRROR'):
@@ -1296,14 +1478,7 @@ class CargarArchivo():
                     """
                     txt2+="""}        
                     </style>
-                    
-                        <header>
-                    <div class="header">
-                     """
-                    txt2+=f"""<h1>{self.Titulos[a]}</h1>"""
-                    txt2+="""
-                    </div>
-                    </header>
+                    </head>
                     <body>
                     <div id="art">
                     """
@@ -1339,6 +1514,9 @@ class CargarArchivo():
                     """    
                     dbmirror.write(txt2)
                     dbmirror.close()
+                    imgDbmirror = Html2Image()
+                    imgDbmirror.output_path=f'{self.Titulos[a]}'
+                    imgDbmirror.screenshot(html_file=f'{self.Titulos[a]}/DoubleMirror.html',save_as='DoubleMirror.png')
                 elif (self.Filtros[a][fls]=='MIRRORX'):
                     mirrorX=open(f'{self.Titulos[a]}/MirrorX.html','w')
                     txt3="""
@@ -1384,13 +1562,6 @@ class CargarArchivo():
                     txt3+="""}        
                     </style>
                     </head>
-                     <header>
-                    <div class="header">
-                     """
-                    txt3+=f"""<h1>{self.Titulos[a]}</h1>"""
-                    txt3+="""
-                    </div>
-                    </header>
                     <body>
                     <div id="art">
                     """
@@ -1423,6 +1594,9 @@ class CargarArchivo():
                     """    
                     mirrorX.write(txt3)
                     mirrorX.close()
+                    imgmirrorx= Html2Image()
+                    imgmirrorx.output_path=f'{self.Titulos[a]}'
+                    imgmirrorx.screenshot(html_file=f'{self.Titulos[a]}/MirrorX.html',save_as='MirrorX.png')
                 elif (self.Filtros[a][fls]=='MIRRORY'):
                     mirrorY=open(f'{self.Titulos[a]}/MirrorY.html','w')
                     txt4="""
@@ -1468,13 +1642,6 @@ class CargarArchivo():
                     txt4+="""}        
                     </style>
                     </head>
-                    <header>
-                    <div class="header">
-                    """
-                    txt4+=f"""<h1>{self.Titulos[a]}</h1>"""
-                    txt4+="""
-                    </div>
-                    </header>
                     <body>
                     <div id="art">
                     """
@@ -1507,22 +1674,6 @@ class CargarArchivo():
                     """    
                     mirrorY.write(txt4)
                     mirrorY.close()
-                
-
-
-
-    
-
-        
-
-
-
-
-                
-            
-
-
-
-
-
-        
+                    imgmirrory= Html2Image()
+                    imgmirrory.output_path=f'{self.Titulos[a]}'
+                    imgmirrory.screenshot(html_file=f'{self.Titulos[a]}/MirrorY.html',save_as='MirrorY.png')          
